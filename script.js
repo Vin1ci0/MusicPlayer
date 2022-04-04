@@ -8,11 +8,14 @@ let musicas = [
 ]
 
 let musica = document.querySelector('audio');
+let indexMusica = 0
 
 let duracaoMusica = document.querySelector('.fim')
 let nomeMusica = document.querySelector('.descricao h2')
 let imagem = document.querySelector('.img')
 let nomeArtista = document.querySelector('.descricao i')
+
+renderizarMusica(indexMusica)
 
 duracaoMusica.textContent = segundosParaMinutos(Math.floor(musica.duration))
 
@@ -22,6 +25,16 @@ document.querySelector('.botao-play').addEventListener('click', tocarMusica);
 document.querySelector('.botao-pause').addEventListener('click', pausarMusica);
 
 musica.addEventListener('timeupdate', atualizarBarra)
+
+document.querySelector('.anterior').addEventListener('click', () => {
+    indexMusica--
+    renderizarMusica(indexMusica)
+})
+
+document.querySelector('.proximo').addEventListener('click', () => {
+    indexMusica++
+    renderizarMusica(indexMusica)
+})
 
 //Funções
 function tocarMusica() {
@@ -47,9 +60,19 @@ function segundosParaMinutos(segundos) {
     let campoMinutos = Math.floor(segundos / 60)
     let campoSegundos = segundos % 60
     
-    if (camposSegundos < 10) {
+    if (campoSegundos < 10) {
         campoSegundos = '0' + campoSegundos
     }
 
     return campoMinutos + ':' + campoSegundos
+}
+
+function renderizarMusica(index) {
+    musica.setAttribute('src', musicas[index].src)
+    musica.addEventListener('loadeddata', () => {
+        nomeMusica.textContent = musicas[index].titulo
+        nomeArtista.textContent = musicas[index].artista
+        imagem.src = musicas[index].img
+        duracaoMusica.textContent = segundosParaMinutos(Math.floor(musica.duration))
+    })
 }
